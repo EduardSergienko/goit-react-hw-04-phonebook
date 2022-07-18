@@ -9,11 +9,6 @@ export default function ContactForm({ onSubmit }) {
   //   onSubmit: PropTypes.func.isRequired,
   // };
 
-  // state = {
-  //   name: '',
-  //   number: '',
-  // };
-
   const onInputtype = e => {
     const { name, value } = e.currentTarget;
 
