@@ -22,7 +22,7 @@ export default function ContactForm({ onSubmit }) {
   };
   const onSubmiteForm = e => {
     e.preventDefault();
-    onSubmit(name, number);
+    onSubmit({ name, number });
     reset();
   };
 
@@ -63,8 +63,6 @@ export default function ContactForm({ onSubmit }) {
       </button>
     </form>
   );
-
-  // const { name, number } = this.state;
 }
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,

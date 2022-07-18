@@ -1,40 +1,32 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm/contactForm';
 import { Filter } from './Filter/filter';
 import { ContactList } from './ContactList/contactList';
 import styles from './appWrap.module.scss';
 
-export class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+export default function App() {
+  const parsedContactsData = JSON.parse(localStorage.getItem('contacts'));
 
-  componentDidMount() {
-    const contactsData = localStorage.getItem('contacts');
-    const parseDcontactsData = JSON.parse(contactsData);
-    if (parseDcontactsData) {
-      this.setState({
-        contacts: parseDcontactsData,
-      });
-    }
-  }
+  const [contacts, setContacts] = useState(() => {
+    return (
+      parsedContactsData ?? [
+        { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+        { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+        { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+        { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+      ]
+    );
+  });
+  const [filter, setFilter] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+    console.log(contacts);
+  }, [contacts]);
 
-  addContact = data => {
+  const addContact = data => {
     console.log(data);
-    const { contacts } = this.state;
     const { name, number } = data;
 
     if (
@@ -49,54 +41,42 @@ export class App extends Component {
         name,
         number,
       };
-
-      this.setState(({ contacts }) => ({
-        contacts: [...contacts, contact],
-      }));
+      setContacts([...contacts, contact]);
     }
   };
 
-  onfilterInputType = e => {
-    this.setState({
-      filter: e.currentTarget.value,
-    });
+  const onfilterInputType = e => {
+    setFilter(e.currentTarget.value);
   };
 
-  filteredContactList = () => {
-    const { contacts, filter } = this.state;
+  const filteredContactList = () => {
     const toLower = filter.toLowerCase();
 
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(toLower)
     );
   };
-  deleteContact = contactid => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactid),
-    }));
+  const deleteContact = contactid => {
+    setContacts(contacts.filter(contact => contact.id !== contactid));
   };
-  render() {
-    const { contacts, filter } = this.state;
-    const filteredContacts = this.filteredContactList();
 
-    return (
-      <>
-        <h1 className={styles.appTitle}>Phonebook</h1>
-        <ContactForm onSubmit={this.addContact} />
-        <h2 className={styles.appTitle}>Contacts</h2>
-        {contacts.length > 1 && (
-          <Filter onChange={this.onfilterInputType} value={filter} />
-        )}
+  return (
+    <>
+      <h1 className={styles.appTitle}>Phonebook</h1>
+      <ContactForm onSubmit={addContact} />
+      <h2 className={styles.appTitle}>Contacts</h2>
+      {contacts.length > 1 && (
+        <Filter onChange={onfilterInputType} value={filter} />
+      )}
 
-        {contacts.length > 0 ? (
-          <ContactList
-            contacts={filteredContacts}
-            onDeleteBtnClick={this.deleteContact}
-          />
-        ) : (
-          <h2 className={styles.appTitle}>Your contact list is empty...</h2>
-        )}
-      </>
-    );
-  }
+      {contacts.length > 0 ? (
+        <ContactList
+          contacts={filteredContactList()}
+          onDeleteBtnClick={deleteContact}
+        />
+      ) : (
+        <h2 className={styles.appTitle}>Your contact list is empty...</h2>
+      )}
+    </>
+  );
 }
