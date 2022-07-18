@@ -30,7 +30,8 @@ export default function ContactForm({ onSubmit }) {
   };
 
   const reset = () => {
-    this.setState({ name: '', number: '' });
+    setName('');
+    setNumber('');
   };
   return (
     <form className={styles.contactForm} onSubmit={onSubmiteForm}>
