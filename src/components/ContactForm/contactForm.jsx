@@ -5,9 +5,6 @@ import styles from './contactForm.module.scss';
 export default function ContactForm({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // static propTypes = {
-  //   onSubmit: PropTypes.func.isRequired,
-  // };
 
   const onInputtype = e => {
     const { name, value } = e.currentTarget;
@@ -69,3 +66,6 @@ export default function ContactForm({ onSubmit }) {
 
   // const { name, number } = this.state;
 }
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
