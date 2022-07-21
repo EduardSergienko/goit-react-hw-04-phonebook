@@ -4,7 +4,7 @@ import ContactForm from './ContactForm/contactForm';
 import { Filter } from './Filter/filter';
 import { ContactList } from './ContactList/contactList';
 import styles from './appWrap.module.scss';
-import useLocalStorage from './Hooks/useLocalStorage';
+import useLocalStorage from '../Hooks/useLocalStorage';
 
 export default function App() {
   const [contacts, setContacts] = useLocalStorage('contacts', [
